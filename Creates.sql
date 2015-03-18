@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /***********************************************************
 	DQL Select
 	Schéma MRD:	"NordAir"
@@ -54,3 +55,35 @@ CREATE SEQUENCE SEQ_ID_RESERVATION
 /***********************************************************
 	Table "RESERVATION"
 ***********************************************************/
+=======
+/******************************
+CREATE TABLE "PASSAGER"
+******************************/
+CREATE TABLE PASSAGER
+(
+	ID_PASSAGER			NUMERIC(10,0)	NOT NULL,
+	NOM					VARCHAR2(15) 	NOT NULL,
+	PRENOM				VARCHAR2(15)	NOT NULL,
+	ADRESSE				VARCHAR2(30)	NOT NULL,
+	TELEPHONE			VARCHAR2(13)	NOT NULL,
+	CONSTRAINT PK_PASSAGER
+		PRIMARY KEY(ID_PASSAGER),
+	CONSTRAINT CHK_TELEPHONE
+		CHECK (/*VÃ‰RIFIER LE # DE TEL FORMAT (XXX)XXX-XXXX*/)
+);
+
+/******************************
+CREATE TABLE "RESERVATION"
+******************************/
+CREATE TABLE RESERVATION
+(
+	ID_RESERVATION		NUMERIC(12,0)	NOT NULL,
+	DATE_RESERVATION	DATE 			DEFAULT GETDATE()	NOT NULL,
+	ID_PASSAGER 		NUMERIC(10,0)	NOT NULL,
+	CONSTRAINT PK_RESERVATION
+		PRIMARY KEY (ID_RESERVATION),
+	CONSTRAINT FK1_RESERVATION_PASSAGER
+		FOREIGN KEY (ID_PASSAGER)
+		REFERENCES PASSAGER (ID_PASSAGER)
+);
+>>>>>>> origin/master
