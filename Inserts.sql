@@ -61,4 +61,81 @@ INSERT INTO
 		'CLAUDINE',
 		'1722 CRESENT, APP 3',
 		'514-555-1234');
-	
+/*===============================================================================
+     Table AVION : 2 Avions
+/*===============================================================================*/
+INSERT INTO
+	AVION(
+		ID_AVION,
+		APPEL_AVION,
+		NOMBRE_PLACE)
+	VALUES
+		(SEQ_ID_AVION.NEXTVAL,
+		'CADM',
+		32);
+INSERT INTO
+	AVION(
+		ID_AVION,
+		APPEL_AVION,
+		NOMBRE_PLACE)
+	VALUES
+		(SEQ_ID_AVION.NEXTVAL,
+		'COPA',
+		48);
+/*===============================================================================
+     Table AEROPORT : 6 Aeroports
+/*===============================================================================*/
+INSERT INTO
+	AEROPORT(
+		ID_AEROPORT,
+		ACR_AEROPORT,
+		NOM_VILLE)
+	VALUES
+		(SEQ_ID_AEROPORT.NEXTVAL,
+		'QSI',
+		'SEPT-ILES');
+INSERT INTO
+	AEROPORT(
+		ID_AEROPORT,
+		ACR_AEROPORT,
+		NOM_VILLE)
+	VALUES
+		(SEQ_ID_AEROPORT.NEXTVAL,
+		'QGA',
+		'GASPE');
+INSERT INTO
+	AEROPORT(
+		ID_AEROPORT,
+		ACR_AEROPORT,
+		NOM_VILLE)
+	VALUES
+		(SEQ_ID_AEROPORT.NEXTVAL,
+		'QRY',
+		'RIMOUSKI');
+INSERT INTO
+	AEROPORT(
+		ID_AEROPORT,
+		ACR_AEROPORT,
+		NOM_VILLE)
+	VALUES
+		(SEQ_ID_AEROPORT.NEXTVAL,
+		'QBC',
+		'BAIE-COMEAU');
+INSERT INTO
+	AEROPORT(
+		ID_AEROPORT,
+		ACR_AEROPORT,
+		NOM_VILLE)
+	VALUES
+		(SEQ_ID_AEROPORT.NEXTVAL,
+		'QMJ',
+		'MONT-JOLI');
+INSERT INTO
+	AEROPORT(
+		ID_AEROPORT,
+		ACR_AEROPORT,
+		NOM_VILLE)
+	VALUES
+		(SEQ_ID_AEROPORT.NEXTVAL,
+		'QHP',
+		'HAVRE SAINT-PIERRE');
