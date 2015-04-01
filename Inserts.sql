@@ -139,3 +139,42 @@ INSERT INTO
 		(SEQ_ID_AEROPORT.NEXTVAL,
 		'QHP',
 		'HAVRE SAINT-PIERRE');
+/*===============================================================================
+     Table VOL : 4 Vols
+/*===============================================================================*/
+INSERT INTO
+	VOL(ID_VOL,
+		NO_VOL,
+		NOTES)
+	VALUES
+		(SEQ_ID_VOL.NEXTVAL,
+		1822,
+		NULL);
+INSERT INTO
+	VOL(ID_VOL,
+		NO_VOL,
+		NOTES)
+	VALUES
+		(SEQ_ID_VOL.NEXTVAL,
+		1823,
+		NULL);
+INSERT INTO
+	VOL(ID_VOL,
+		NO_VOL,
+		NOTES)
+	VALUES
+		(SEQ_ID_VOL.NEXTVAL,
+		1922,
+		NULL);
+INSERT INTO
+	VOL(ID_VOL,
+		NO_VOL,
+		NOTES)
+	VALUES
+		(SEQ_ID_VOL.NEXTVAL,
+		1923,
+		NULL);
+/*===============================================================================
+     Table PASSAGER : ## Passagers
+/*===============================================================================*/
+		
