@@ -1,3 +1,11 @@
+/* **********************************************************
+	DDL Drop
+	Schéma MRD:	"NordAir"
+	Auteur:		Dominique Septembre & Charles-Edouard Beaudet - Cégep de Ste-Foy  	
+***********************************************************/
+/*
+	Suppression des tables et séquences
+*/
 DROP TABLE RESERVATION_ENVOLEE;
 DROP TABLE ENVOLEE;
 DROP TABLE PILOTE;

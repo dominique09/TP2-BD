@@ -64,7 +64,14 @@ CREATE TABLE AVION
 	CONSTRAINT U1_APPEL_AVION
 					UNIQUE(APPEL_AVION)
 );
-
+/* **********************************************************
+	DDL Create
+	Schéma MRD:	"NordAir"
+	Auteur:		Dominique Septembre & Charles-Edouard Beaudet - Cégep de Ste-Foy  	
+***********************************************************/
+/*
+	Création des tables et séquences
+*/
 /***********************************************************
 	SEQUENCE "SEQ_ID_AVION"
 ***********************************************************/
