@@ -49,9 +49,39 @@ ORDER BY
 	l'ensemble du vol (sur tous les segments) (DISPONIBLES).
 	Cette liste est triée par date puis par vol. 
 ============================================================================*/
-SELECT --À TESTER
-	TO_DATE(ENVOLEE.DATE_ENVOLEE,'YYYY-MM-DD') AS 'DATE VOL',
-	VOL.NO_VOL AS 'VOL',
-	AVION.NOMBRE_PLACES AS 'NB SIEGES',
-	
+SELECT DISTINCT--À TESTER
+	TO_DATE(ENVOLEE.DATE_ENVOLEE,'YYYY-MM-DD') AS "DATE VOL",
+	VOL.NO_VOL AS "VOL",
+	AVION.NOMBRE_PLACES AS "NB SIEGES",
+	(SELECT GET_NUMBER_OF_AVAILABLE_PLACE(VOL.ID_VOL) FROM DUAL) AS "DISPONIBLES" 
+FROM
+	ENVOLEE
+		INNER JOIN AVION
+			ON ENVOLEE.ID_AVION = AVION.ID_AVION
+		INNER JOIN SEGMENT
+			ON ENVOLEE.ID_SEGMENT = SEGMENT.ID_SEGMENT AND
+			ENVOLEE.DATE_ENVOLEE BETWEEN TO_DATE('13-05-2015','DD-MM-YYYY') AND
+								 TO_DATE('19-05-2015','DD-MM-YYYY')
+				INNER JOIN VOL
+					ON SEGMENT.ID_VOL = VOL.ID_VOL
+WHERE
+	ENVOLEE.DATE_ENVOLEE BETWEEN TO_DATE('13-05-2015','DD-MM-YYYY') AND
+								 TO_DATE('19-05-2015','DD-MM-YYYY')
+ORDER BY
+	"DATE VOL",
+	VOL.NO_VOL;
+
+/*============================================================================
+	3.
+	Produire la liste des passagers pour les vols de la période du 13 au 19 
+	mai 2015.  Cette liste comporte les informations suivantes dans l'ordre:
+	la date du vol, sous le format YYYY-MM-DD (DEPART), le numéro du vol (VOL), 
+	le nom et le prénom du passager (PASSAGER),le nom de la ville de l'aéroport
+	initial de départ pour le passager (DE), le nom de la ville de l'aéroport
+	de la destination finale (terminale) pour le passager (A). 
+	Cette liste est triée par date d'envolée, puis par vol, par segment initial 
+	(ordre du segment) et par segment d’arrivée (ordre du segment), et 
+	finalement par nom et prénom des passagers
+============================================================================*/
+			
 
