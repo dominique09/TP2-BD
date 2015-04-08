@@ -15,12 +15,12 @@
 	Cette liste est triée par ville de départ, heure de départ puis ville 
 	de destination. 
 ============================================================================*/
-SELECT --À TESTER
+SELECT --TESTÉE ET APPROUVÉ
 	VOL.NO_VOL AS "VOL",
 	AER_DEPART.NOM_VILLE AS "DEPART",
 	TO_CHAR(SEGMENT.HEURE_DEPART,'HH24:MI') AS "A",
 	AER_DESTINATION.NOM_VILLE AS "ARRIVEE",
-	(SELECT FORMAT_NUMERIC_TO_HOUR(SEGMENT.DUREE_VOL) FROM DUAL) AS "DUREE"
+	SUBSTR((SELECT FORMAT_NUMERIC_TO_HOUR(SEGMENT.DUREE_VOL) FROM DUAL),1,30) AS "DUREE"
 FROM
 	SEGMENT
 		INNER JOIN AEROPORT AER_DEPART
@@ -50,18 +50,16 @@ ORDER BY
 	Cette liste est triée par date puis par vol. 
 ============================================================================*/
 SELECT DISTINCT--À TESTER
-	TO_DATE(ENVOLEE.DATE_ENVOLEE,'YYYY-MM-DD') AS "DATE VOL",
+	TO_CHAR(ENVOLEE.DATE_ENVOLEE,'YYYY-MM-DD') AS "DATE VOL",
 	VOL.NO_VOL AS "VOL",
 	AVION.NOMBRE_PLACES AS "NB SIEGES",
-	(SELECT GET_NUMBER_OF_AVAILABLE_PLACE(VOL.ID_VOL) FROM DUAL) AS "DISPONIBLES" 
+	(SELECT GET_NUMBER_OF_AVAILABLE_PLACE(VOL.ID_VOL, TO_CHAR(ENVOLEE.DATE_ENVOLEE,'DD-MM-YYYY')) FROM DUAL) AS "DISPONIBLES" 
 FROM
 	ENVOLEE
 		INNER JOIN AVION
 			ON ENVOLEE.ID_AVION = AVION.ID_AVION
 		INNER JOIN SEGMENT
-			ON ENVOLEE.ID_SEGMENT = SEGMENT.ID_SEGMENT AND
-			ENVOLEE.DATE_ENVOLEE BETWEEN TO_DATE('13-05-2015','DD-MM-YYYY') AND
-								 TO_DATE('19-05-2015','DD-MM-YYYY')
+			ON ENVOLEE.ID_SEGMENT = SEGMENT.ID_SEGMENT
 				INNER JOIN VOL
 					ON SEGMENT.ID_VOL = VOL.ID_VOL
 WHERE
@@ -83,5 +81,6 @@ ORDER BY
 	(ordre du segment) et par segment d’arrivée (ordre du segment), et 
 	finalement par nom et prénom des passagers
 ============================================================================*/
-			
+SELECT
+	
 
