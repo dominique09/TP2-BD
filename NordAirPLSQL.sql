@@ -7,6 +7,7 @@
 /*===========================================================
 Fonction pour convertir les minutes (numéric) en hh:mm
 ===========================================================*/
+--A)
 SHOW ERRORS FUNCTION FORMAT_NUMERIC_TO_HOUR;
 
 CREATE OR REPLACE
@@ -32,20 +33,39 @@ BEGIN
 END FORMAT_NUMERIC_TO_HOUR;
 /
 
-SELECT FORMAT_NUMERIC_TO_HOUR(1453) FROM DUAL;
+--B)
+SELECT
+	PILOTE.NO_PILOTE,
+	PILOTE.NOM,
+	PILOTE.PRENOM,
+	SUBSTR(FORMAT_NUMERIC_TO_HOUR(minutes_vol_pilote(PILOTE.NO_PILOTE,TO_DATE('13-05-2015','DD-MM-YYYY'),TO_DATE('19-05-2015','DD-MM-YYYY'))),0,20) AS HEURES
+FROM	
+	PILOTE
+WHERE
+	PILOTE.NO_PILOTE IN (22, 34);
 
 /*=============================================================================
 Fonction qui retourne le nombre de minutes de vol d'un pilote entre deux date
 ==============================================================================*/
+--A)
+SET SERVEROUTPUT ON SIZE 30000;
 SHOW ERRORS FUNCTION minutes_vol_pilote;
-SET SERVEROUTPUT ON;
 
 CREATE OR REPLACE
 	FUNCTION minutes_vol_pilote(p_no_pilote IN NUMERIC, p_date_debut IN DATE, p_date_fin IN DATE) RETURN NUMERIC
 AS
 	v_nb_minutes NUMERIC;
 	v_pilote_existe NUMERIC;
+	e_no_pilote_invalide EXCEPTION;
+	e_dates_invalide EXCEPTION;
 BEGIN	
+	SELECT COUNT(NO_PILOTE) INTO v_pilote_existe FROM PILOTE WHERE NO_PILOTE = p_no_pilote;
+	IF(v_pilote_existe = 0) THEN
+		RAISE e_no_pilote_invalide;
+	END IF;	
+	IF(p_date_fin < p_date_debut) THEN
+		RAISE e_dates_invalide;
+	END IF;
 	SELECT
 		NVL(SUM(SEGMENT.DUREE_VOL),0) AS "NB MIN VOLS"
 	INTO	
@@ -61,19 +81,31 @@ BEGIN
 		PILOTE.ID_PILOTE NOT IN (SELECT ID_PILOTE FROM ENVOLEE) OR
 		ENVOLEE.DATE_ENVOLEE BETWEEN p_date_debut AND
 									 p_date_fin);
-									 
-	SELECT NVL(NO_PILOTE,-1) INTO v_pilote_existe FROM PILOTE WHERE NO_PILOTE = p_no_pilote;
-	
 	RETURN v_nb_minutes;								 
 	EXCEPTION	
-		WHEN OTHERS THEN
-			raise_application_error(-20001,'An error was encountered - '||SQLCODE||' -ERROR- '||SQLERRM);
+		WHEN e_no_pilote_invalide THEN
+			DBMS_OUTPUT.PUT_LINE('PILOTE ' || p_no_pilote || ' INEXISTANT');
+			RETURN -1;
+		WHEN e_dates_invalide THEN
+			DBMS_OUTPUT.PUT_LINE('DATES INVALIDES');
+			RETURN -1;
+			
 END minutes_vol_pilote;
 /
-
-SELECT minutes_vol_pilote(55,TO_DATE('13-05-2015','DD-MM-YYYY'),TO_DATE('19-05-2015','DD-MM-YYYY')) FROM DUAL;
-SELECT minutes_vol_pilote(34,TO_DATE('13-05-2015','DD-MM-YYYY'),TO_DATE('19-05-2015','DD-MM-YYYY')) FROM DUAL;
+--B)
+SELECT
+	PILOTE.NO_PILOTE,
+	PILOTE.NOM,
+	PILOTE.PRENOM,
+	minutes_vol_pilote(PILOTE.NO_PILOTE,TO_DATE('13-05-2015','DD-MM-YYYY'),TO_DATE('19-05-2015','DD-MM-YYYY')) AS MINUTES
+FROM	
+	PILOTE
+WHERE
+	PILOTE.NO_PILOTE IN (22, 34);
+	
+--C)
 SELECT minutes_vol_pilote(14,TO_DATE('13-05-2015','DD-MM-YYYY'),TO_DATE('19-05-2015','DD-MM-YYYY')) FROM DUAL;
+SELECT minutes_vol_pilote(22,TO_DATE('29-05-2015','DD-MM-YYYY'),TO_DATE('19-05-2015','DD-MM-YYYY')) FROM DUAL;
 
 /*=================================================================
 Fonction pour avoir le nombre de places occupées maximal d'un vol
