@@ -35,7 +35,7 @@ END FORMAT_NUMERIC_TO_HOUR;
 SELECT FORMAT_NUMERIC_TO_HOUR(1453) FROM DUAL;
 
 /*****************************************************************
-Fonction pour avoir le nombre de places disponibles d'un vol
+Fonction pour avoir le nombre de places occupées maximal d'un vol
 ******************************************************************/
 SHOW ERRORS FUNCTION GET_NUMBER_OF_OCCUPIED_PLACE;
 
@@ -65,82 +65,27 @@ END GET_NUMBER_OF_OCCUPIED_PLACE;
 
 SELECT GET_NUMBER_OF_OCCUPIED_PLACE(2, '14-05-2015') FROM DUAL;
 
-/*****************************************************************
-SELECT pour avoir les informations d'un vol
-******************************************************************/	
-SELECT 
-	SEGMENT.ID_VOL AS "VOL",
-	VOL.NO_VOL AS "NO VOL",
-	SEGMENT.ID_SEGMENT AS "SEGMENT",
-	SEGMENT.ORDRE_SEGMENT AS "ORDRE",
-	ENVOLEE.ID_ENVOLEE AS "ENVOLEE",
-	TO_CHAR(ENVOLEE.DATE_ENVOLEE,'DD-MM-YYYY') AS "DATE",
-	RESERVATION_ENVOLEE.ID_RESERV_ENVOLEE AS "RESERV ENVOLEE",
-	RESERVATION_ENVOLEE.CODE_SIEGE AS "SIEGE"
-FROM 
-	SEGMENT
-		FULL OUTER JOIN ENVOLEE
-			ON ENVOLEE.ID_SEGMENT = SEGMENT.ID_SEGMENT
-				FULL OUTER JOIN RESERVATION_ENVOLEE
-					ON ENVOLEE.ID_ENVOLEE = RESERVATION_ENVOLEE.ID_ENVOLEE
-		INNER JOIN VOL
-			ON SEGMENT.ID_VOL = VOL.ID_VOL
-ORDER BY
-	SEGMENT.ID_VOL,
-	ENVOLEE.DATE_ENVOLEE,
-	SEGMENT.ORDRE_SEGMENT;
-	
-/*****************************************************************
-SELECT pour avoir les informations d'un PASSAGER
-******************************************************************/	
-SELECT 
-	PASSAGER.ID_PASSAGER,
-	PASSAGER.NOM,
-	VOL.NO_VOL,
-	RESERVATION.ID_RESERVATION,
-	RESERVATION_ENVOLEE.ID_RESERV_ENVOLEE,
-	ENVOLEE.DATE_ENVOLEE,
-	SEGMENT.ORDRE_SEGMENT AS "ORDRE"
-FROM
-	PASSAGER
-		INNER JOIN RESERVATION
-			ON PASSAGER.ID_PASSAGER = RESERVATION.ID_PASSAGER
-			INNER JOIN RESERVATION_ENVOLEE
-				ON RESERVATION_ENVOLEE.ID_RESERVATION = RESERVATION.ID_RESERVATION
-				INNER JOIN ENVOLEE
-					ON RESERVATION_ENVOLEE.ID_ENVOLEE = ENVOLEE.ID_ENVOLEE
-					INNER JOIN SEGMENT
-						ON ENVOLEE.ID_SEGMENT = SEGMENT.ID_SEGMENT
-						INNER JOIN VOL
-							ON SEGMENT.ID_VOL = VOL.ID_VOL
-WHERE
-	PASSAGER.ID_PASSAGER = 3
-ORDER BY
-	PASSAGER.ID_PASSAGER,
-	ENVOLEE.DATE_ENVOLEE,
-	SEGMENT.ORDRE_SEGMENT;
-	
-/*****************************************************************
-prototype sous requête select 3
-******************************************************************/	
-SELECT 
-	MIN(SEGMENT.ORDRE_SEGMENT) AS "ORDRE_"
-FROM
-	PASSAGER
-		INNER JOIN RESERVATION
-			ON PASSAGER.ID_PASSAGER = RESERVATION.ID_PASSAGER
-			INNER JOIN RESERVATION_ENVOLEE
-				ON RESERVATION_ENVOLEE.ID_RESERVATION = RESERVATION.ID_RESERVATION
-				INNER JOIN ENVOLEE
-					ON RESERVATION_ENVOLEE.ID_ENVOLEE = ENVOLEE.ID_ENVOLEE
-					INNER JOIN SEGMENT
-						ON ENVOLEE.ID_SEGMENT = SEGMENT.ID_SEGMENT
-						INNER JOIN VOL
-							ON SEGMENT.ID_VOL = VOL.ID_VOL
-WHERE
-	PASSAGER.ID_PASSAGER = 6 AND
-	TO_CHAR(ENVOLEE.DATE_ENVOLEE,'DD-MM-YYYY') = '16-05-2015';
-	
-	
+/*****************************************************************************
+Fonction qui retourne le nombre de minutes de vol d'un pilote entre deux date
+******************************************************************************/
+SHOW ERRORS FUNCTION minutes_vol_pilote;
 
-						
+CREATE OR REPLACE
+	FUNCTION minutes_vol_pilote(p_no_pilote IN NUMERIC, p_date_début IN DATE, p_date_fin IN DATE) RETURN NUMERIC
+AS
+BEGIN 
+	
+END minutes_vol_pilote;
+
+SELECT
+	PILOTE.NO_PILOTE,
+	ENVOLEE.ID_ENVOLEE,
+	SEGMENT.DUREE_VOL
+FROM
+	PILOTE
+		INNER JOIN ENVOLEE
+			ON PILOTE.ID_PILOTE = ENVOLEE.ID_PILOTE
+			INNER JOIN SEGMENT 
+				ON ENVOLEE.ID_SEGMENT = SEGMENT.ID_SEGMENT
+WHERE
+	ENVOLEE.DATE_ENVOLEE BETWEEN TO_CHAR(
