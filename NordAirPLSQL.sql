@@ -38,12 +38,14 @@ SELECT FORMAT_NUMERIC_TO_HOUR(1453) FROM DUAL;
 Fonction qui retourne le nombre de minutes de vol d'un pilote entre deux date
 ******************************************************************************/
 SHOW ERRORS FUNCTION minutes_vol_pilote;
+SET SERVEROUTPUT ON;
 
 CREATE OR REPLACE
 	FUNCTION minutes_vol_pilote(p_no_pilote IN NUMERIC, p_date_debut IN DATE, p_date_fin IN DATE) RETURN NUMERIC
 AS
 	v_nb_minutes NUMERIC;
-BEGIN 
+	v_pilote_existe NUMERIC;
+BEGIN	
 	SELECT
 		NVL(SUM(SEGMENT.DUREE_VOL),0) AS "NB MIN VOLS"
 	INTO	
@@ -59,12 +61,17 @@ BEGIN
 		PILOTE.ID_PILOTE NOT IN (SELECT ID_PILOTE FROM ENVOLEE) OR
 		ENVOLEE.DATE_ENVOLEE BETWEEN p_date_debut AND
 									 p_date_fin);
-	RETURN v_nb_minutes;
+	SELECT NVL(NO_PILOTE,-1) INTO v_pilote_existe FROM PILOTE WHERE NO_PILOTE = p_no_pilote;
+	RETURN v_nb_minutes;								 
+	EXCEPTION	
+		WHEN OTHERS THEN
+			raise_application_error(-20001,'An error was encountered - '||SQLCODE||' -ERROR- '||SQLERRM);
 END minutes_vol_pilote;
 /
 
 SELECT minutes_vol_pilote(55,TO_DATE('13-05-2015','DD-MM-YYYY'),TO_DATE('19-05-2015','DD-MM-YYYY')) FROM DUAL;
 SELECT minutes_vol_pilote(34,TO_DATE('13-05-2015','DD-MM-YYYY'),TO_DATE('19-05-2015','DD-MM-YYYY')) FROM DUAL;
+SELECT minutes_vol_pilote(14,TO_DATE('13-05-2015','DD-MM-YYYY'),TO_DATE('19-05-2015','DD-MM-YYYY')) FROM DUAL;
 /*****************************************************************
 Fonction pour avoir le nombre de places occupées maximal d'un vol
 ******************************************************************/
