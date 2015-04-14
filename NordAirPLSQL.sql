@@ -10,30 +10,61 @@ Fonction pour convertir les minutes (numéric) en hh:mm
 SHOW ERRORS FUNCTION FORMAT_NUMERIC_TO_HOUR;
 
 CREATE OR REPLACE
-	FUNCTION FORMAT_NUMERIC_TO_HOUR(P_NUMERIC IN NUMERIC) RETURN VARCHAR2
+	FUNCTION FORMAT_NUMERIC_TO_HOUR(p_minutes IN NUMERIC) RETURN VARCHAR2
 AS
-	V_MINUTES NUMERIC;	
-	V_HOURS NUMERIC;
-	V_FORMAT_HOURS VARCHAR2(5);
+	v_minutes NUMERIC;	
+	v_hours NUMERIC;
+	v_format_hour VARCHAR2(5);
 BEGIN
-	V_MINUTES := MOD(P_NUMERIC, 60);
-	V_HOURS := TRUNC(P_NUMERIC / 60, 0);
-	IF(V_HOURS < 10) THEN
-		V_FORMAT_HOURS := '0' || V_HOURS || ':';
+	v_minutes := MOD(p_minutes, 60);
+	v_hours := TRUNC(p_minutes / 60, 0);
+	IF(v_hours < 10) THEN
+		v_format_hour := '0' || v_hours || ':';
 	ELSE
-		V_FORMAT_HOURS := V_HOURS || ':';
+		v_format_hour := v_hours || ':';
 	END IF;
-	IF(V_MINUTES < 10) THEN
-		V_FORMAT_HOURS := V_FORMAT_HOURS || '0' || V_MINUTES;
+	IF(v_minutes < 10) THEN
+		v_format_hour := v_format_hour || '0' || v_minutes;
 	ELSE
-		V_FORMAT_HOURS := V_FORMAT_HOURS || V_MINUTES;
+		v_format_hour := v_format_hour|| v_minutes;
 	END IF;
-	RETURN V_FORMAT_HOURS;	
+	RETURN v_format_hour;	
 END FORMAT_NUMERIC_TO_HOUR;
 /
 
 SELECT FORMAT_NUMERIC_TO_HOUR(1453) FROM DUAL;
 
+/*****************************************************************************
+Fonction qui retourne le nombre de minutes de vol d'un pilote entre deux date
+******************************************************************************/
+SHOW ERRORS FUNCTION minutes_vol_pilote;
+
+CREATE OR REPLACE
+	FUNCTION minutes_vol_pilote(p_no_pilote IN NUMERIC, p_date_debut IN DATE, p_date_fin IN DATE) RETURN NUMERIC
+AS
+	v_nb_minutes NUMERIC;
+BEGIN 
+	SELECT
+		NVL(SUM(SEGMENT.DUREE_VOL),0) AS "NB MIN VOLS"
+	INTO	
+		v_nb_minutes
+	FROM 
+		PILOTE
+			LEFT OUTER JOIN ENVOLEE
+				ON ENVOLEE.ID_PILOTE = PILOTE.ID_PILOTE
+				LEFT OUTER JOIN SEGMENT
+					ON SEGMENT.ID_SEGMENT = ENVOLEE.ID_SEGMENT
+	WHERE
+		PILOTE.NO_PILOTE = p_no_pilote AND(
+		PILOTE.ID_PILOTE NOT IN (SELECT ID_PILOTE FROM ENVOLEE) OR
+		ENVOLEE.DATE_ENVOLEE BETWEEN p_date_debut AND
+									 p_date_fin);
+	RETURN v_nb_minutes;
+END minutes_vol_pilote;
+/
+
+SELECT minutes_vol_pilote(55,TO_DATE('13-05-2015','DD-MM-YYYY'),TO_DATE('19-05-2015','DD-MM-YYYY')) FROM DUAL;
+SELECT minutes_vol_pilote(34,TO_DATE('13-05-2015','DD-MM-YYYY'),TO_DATE('19-05-2015','DD-MM-YYYY')) FROM DUAL;
 /*****************************************************************
 Fonction pour avoir le nombre de places occupées maximal d'un vol
 ******************************************************************/
@@ -65,27 +96,3 @@ END GET_NUMBER_OF_OCCUPIED_PLACE;
 
 SELECT GET_NUMBER_OF_OCCUPIED_PLACE(2, '14-05-2015') FROM DUAL;
 
-/*****************************************************************************
-Fonction qui retourne le nombre de minutes de vol d'un pilote entre deux date
-******************************************************************************/
-SHOW ERRORS FUNCTION minutes_vol_pilote;
-
-CREATE OR REPLACE
-	FUNCTION minutes_vol_pilote(p_no_pilote IN NUMERIC, p_date_début IN DATE, p_date_fin IN DATE) RETURN NUMERIC
-AS
-BEGIN 
-	
-END minutes_vol_pilote;
-
-SELECT
-	PILOTE.NO_PILOTE,
-	ENVOLEE.ID_ENVOLEE,
-	SEGMENT.DUREE_VOL
-FROM
-	PILOTE
-		INNER JOIN ENVOLEE
-			ON PILOTE.ID_PILOTE = ENVOLEE.ID_PILOTE
-			INNER JOIN SEGMENT 
-				ON ENVOLEE.ID_SEGMENT = SEGMENT.ID_SEGMENT
-WHERE
-	ENVOLEE.DATE_ENVOLEE BETWEEN TO_CHAR(
