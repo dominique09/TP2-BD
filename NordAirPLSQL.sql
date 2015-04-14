@@ -1,12 +1,12 @@
-/***********************************************************
+/*===========================================================
 	PL SQL FONCTION/PROCÉDURES
 	Schéma MRD:	"NordAir"
 	Auteur:		Dominique Septembre + Charles-Edouard Beaudet - Cégep de Ste-Foy  	
-***********************************************************/
+===========================================================*/
 
-/***********************************************************
+/*===========================================================
 Fonction pour convertir les minutes (numéric) en hh:mm
-***********************************************************/
+===========================================================*/
 SHOW ERRORS FUNCTION FORMAT_NUMERIC_TO_HOUR;
 
 CREATE OR REPLACE
@@ -34,9 +34,9 @@ END FORMAT_NUMERIC_TO_HOUR;
 
 SELECT FORMAT_NUMERIC_TO_HOUR(1453) FROM DUAL;
 
-/*****************************************************************************
+/*=============================================================================
 Fonction qui retourne le nombre de minutes de vol d'un pilote entre deux date
-******************************************************************************/
+==============================================================================*/
 SHOW ERRORS FUNCTION minutes_vol_pilote;
 SET SERVEROUTPUT ON;
 
@@ -61,7 +61,9 @@ BEGIN
 		PILOTE.ID_PILOTE NOT IN (SELECT ID_PILOTE FROM ENVOLEE) OR
 		ENVOLEE.DATE_ENVOLEE BETWEEN p_date_debut AND
 									 p_date_fin);
+									 
 	SELECT NVL(NO_PILOTE,-1) INTO v_pilote_existe FROM PILOTE WHERE NO_PILOTE = p_no_pilote;
+	
 	RETURN v_nb_minutes;								 
 	EXCEPTION	
 		WHEN OTHERS THEN
@@ -72,9 +74,10 @@ END minutes_vol_pilote;
 SELECT minutes_vol_pilote(55,TO_DATE('13-05-2015','DD-MM-YYYY'),TO_DATE('19-05-2015','DD-MM-YYYY')) FROM DUAL;
 SELECT minutes_vol_pilote(34,TO_DATE('13-05-2015','DD-MM-YYYY'),TO_DATE('19-05-2015','DD-MM-YYYY')) FROM DUAL;
 SELECT minutes_vol_pilote(14,TO_DATE('13-05-2015','DD-MM-YYYY'),TO_DATE('19-05-2015','DD-MM-YYYY')) FROM DUAL;
-/*****************************************************************
+
+/*=================================================================
 Fonction pour avoir le nombre de places occupées maximal d'un vol
-******************************************************************/
+==================================================================*/
 SHOW ERRORS FUNCTION GET_NUMBER_OF_OCCUPIED_PLACE;
 
 CREATE OR REPLACE
@@ -100,6 +103,3 @@ BEGIN
 	RETURN V_OCCUPIED;
 END GET_NUMBER_OF_OCCUPIED_PLACE;
 /
-
-SELECT GET_NUMBER_OF_OCCUPIED_PLACE(2, '14-05-2015') FROM DUAL;
-

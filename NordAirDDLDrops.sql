@@ -4,8 +4,12 @@
 	Auteur:		Dominique Septembre & Charles-Edouard Beaudet - Cégep de Ste-Foy  	
 ***********************************************************/
 /*
-	Suppression des tables et séquences
+	Suppression des tables, séquences et indexs
 */
+DROP INDEX IDX_PASSAGER;
+DROP INDEX IDX_PILOTE;
+DROP INDEX IDX_SEGMENT;
+DROP INDEX IDX_ENVOLEE;
 DROP TABLE RESERVATION_ENVOLEE;
 DROP TABLE ENVOLEE;
 DROP TABLE PILOTE;

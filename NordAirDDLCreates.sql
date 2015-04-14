@@ -1,10 +1,13 @@
-/***********************************************************
-	DQL Select
+/* **********************************************************
+	DDL Create
 	Schéma MRD:	"NordAir"
-	Auteur:		Dominique Septembre + Charles-Edouard Beaudet - Cégep de Ste-Foy  	
+	Auteur:		Dominique Septembre & Charles-Edouard Beaudet - Cégep de Ste-Foy  	
 ***********************************************************/
+/*
+	Création des tables et séquences
+*/
 
-/***********************************************************
+/* **********************************************************
 	Table "PASSAGER"
 ***********************************************************/
 CREATE TABLE PASSAGER
@@ -19,8 +22,14 @@ CREATE TABLE PASSAGER
 	CONSTRAINT CHK_PASS_TELEPHONE
 					CHECK (REGEXP_LIKE(TELEPHONE,'\([0-9]{3}\)[0-9]{3}-[0-9]{4}'))
 );
+/* **********************************************************
+	INDEX SUR LE PASSAGER
+***********************************************************/
+CREATE INDEX 
+	IDX_PASSAGER
+ON PASSAGER(NOM, PRENOM);
 
-/***********************************************************
+/* **********************************************************
 	SEQUENCE "SEQ_ID_PASSAGER"
 ***********************************************************/
 CREATE SEQUENCE SEQ_ID_PASSAGER
@@ -28,7 +37,7 @@ CREATE SEQUENCE SEQ_ID_PASSAGER
 			 INCREMENT BY 1
 			 MAXVALUE 999999;
 
-/***********************************************************
+/* **********************************************************
 	Table "RESERVATION"
 ***********************************************************/
 CREATE TABLE RESERVATION
@@ -43,7 +52,7 @@ CREATE TABLE RESERVATION
 					REFERENCES PASSAGER (ID_PASSAGER)
 );
 
-/***********************************************************
+/* **********************************************************
 	SEQUENCE "SEQ_ID_RESERVATION"
 ***********************************************************/
 CREATE SEQUENCE SEQ_ID_RESERVATION
@@ -51,7 +60,7 @@ CREATE SEQUENCE SEQ_ID_RESERVATION
 			 INCREMENT BY 1
 			 MAXVALUE 999999;
 
-/***********************************************************
+/* **********************************************************
 	Table "AVION"
 ***********************************************************/
 CREATE TABLE AVION
@@ -64,15 +73,8 @@ CREATE TABLE AVION
 	CONSTRAINT U1_APPEL_AVION
 					UNIQUE(APPEL_AVION)
 );
+
 /* **********************************************************
-	DDL Create
-	Schéma MRD:	"NordAir"
-	Auteur:		Dominique Septembre & Charles-Edouard Beaudet - Cégep de Ste-Foy  	
-***********************************************************/
-/*
-	Création des tables et séquences
-*/
-/***********************************************************
 	SEQUENCE "SEQ_ID_AVION"
 ***********************************************************/
 CREATE SEQUENCE SEQ_ID_AVION
@@ -80,7 +82,7 @@ CREATE SEQUENCE SEQ_ID_AVION
 			 INCREMENT BY 1
 			 MAXVALUE 999999;
 
-/***********************************************************
+/* **********************************************************
 	Table "VOL"
 ***********************************************************/
 CREATE TABLE VOL
@@ -94,7 +96,7 @@ CREATE TABLE VOL
 					UNIQUE(NO_VOL)
 );
 
-/***********************************************************
+/* **********************************************************
 	SEQUENCE "SEQ_ID_VOL"
 ***********************************************************/
 CREATE SEQUENCE SEQ_ID_VOL
@@ -102,7 +104,7 @@ CREATE SEQUENCE SEQ_ID_VOL
 			 INCREMENT BY 1
 			 MAXVALUE 999999;
 			 
-/***********************************************************
+/* **********************************************************
 	Table "AEROPORT"
 ***********************************************************/
 CREATE TABLE AEROPORT
@@ -116,7 +118,7 @@ CREATE TABLE AEROPORT
 					UNIQUE (ACR_AEROPORT)
 );
 
-/***********************************************************
+/* **********************************************************
 	SEQUENCE "SEQ_ID_AEROPORT"
 ***********************************************************/
 CREATE SEQUENCE SEQ_ID_AEROPORT
@@ -124,7 +126,7 @@ CREATE SEQUENCE SEQ_ID_AEROPORT
 			 INCREMENT BY 1
 			 MAXVALUE 999999;
 
-/***********************************************************
+/* **********************************************************
 	Table "PILOTE"
 ***********************************************************/
 CREATE TABLE PILOTE
@@ -143,7 +145,14 @@ CREATE TABLE PILOTE
 					CHECK (REGEXP_LIKE(TELEPHONE,'\([0-9]{3}\)[0-9]{3}-[0-9]{4}'))
 );
 
-/***********************************************************
+/* **********************************************************
+	INDEX SUR LE PILOTE
+***********************************************************/
+CREATE INDEX
+	IDX_PILOTE
+ON PILOTE(NOM, PRENOM);
+
+/* **********************************************************
 	SEQUENCE "SEQ_ID_PILOTE"
 ***********************************************************/
 CREATE SEQUENCE SEQ_ID_PILOTE
@@ -151,7 +160,7 @@ CREATE SEQUENCE SEQ_ID_PILOTE
 			 INCREMENT BY 1
 			 MAXVALUE 999999;
 
-/***********************************************************
+/* **********************************************************
 	Table "SEGMENT"
 ***********************************************************/
 CREATE TABLE SEGMENT
@@ -178,7 +187,14 @@ CREATE TABLE SEGMENT
 					REFERENCES AEROPORT (ID_AEROPORT)
 );
 
-/***********************************************************
+/* **********************************************************
+	INDEX SUR LE SEGMENT
+***********************************************************/
+CREATE INDEX
+	IDX_SEGMENT
+ON SEGMENT(HEURE_DEPART);
+
+/* **********************************************************
 	SEQUENCE "SEQ_ID_SEGMENT"
 ***********************************************************/
 CREATE SEQUENCE SEQ_ID_SEGMENT
@@ -186,7 +202,7 @@ CREATE SEQUENCE SEQ_ID_SEGMENT
 			 INCREMENT BY 1
 			 MAXVALUE 999999;
 			 
-/***********************************************************
+/* **********************************************************
 	Table "ENVOLEE"
 ***********************************************************/
 CREATE TABLE ENVOLEE
@@ -211,7 +227,14 @@ CREATE TABLE ENVOLEE
 					REFERENCES SEGMENT (ID_SEGMENT)
 );
 
-/***********************************************************
+/* **********************************************************
+	INDEX SUR L'ENVOLEE
+***********************************************************/
+CREATE INDEX 
+	IDX_ENVOLEE
+ON ENVOLEE(DATE_ENVOLEE);
+
+/* **********************************************************
 	SEQUENCE "SEQ_ID_ENVOLEE"
 ***********************************************************/
 CREATE SEQUENCE SEQ_ID_ENVOLEE
@@ -219,7 +242,7 @@ CREATE SEQUENCE SEQ_ID_ENVOLEE
 			 INCREMENT BY 1
 			 MAXVALUE 999999;
 			 
-/***********************************************************
+/* **********************************************************
 	Table "RESERVATION_ENVOLEE"
 ***********************************************************/
 CREATE TABLE RESERVATION_ENVOLEE
@@ -243,7 +266,7 @@ CREATE TABLE RESERVATION_ENVOLEE
 	CONSTRAINT CHK_CODE_SIEGE
 					CHECK (REGEXP_LIKE(CODE_SIEGE,'\d{2}[A|B|C|D]'))
 );
-/***********************************************************
+/* **********************************************************
 	SEQUENCE "SEQ_ID_RESERV_ENVOLEE"
 ***********************************************************/
 CREATE SEQUENCE SEQ_ID_RESERV_ENVOLEE
