@@ -4,12 +4,13 @@
 	Auteur:		Dominique Septembre + Charles-Edouard Beaudet - Cégep de Ste-Foy  	
 ===========================================================*/
 
+SET LINESIZE 200;
+SET ECHO ON;
+SPOOL 'C:\SPOOL.txt';
 /*===========================================================
 Fonction pour convertir les minutes (numéric) en hh:mm
 ===========================================================*/
 --A)
-SHOW ERRORS FUNCTION FORMAT_NUMERIC_TO_HOUR;
-
 CREATE OR REPLACE
 	FUNCTION FORMAT_NUMERIC_TO_HOUR(p_minutes IN NUMERIC) RETURN VARCHAR2
 AS
@@ -32,8 +33,10 @@ BEGIN
 	RETURN v_format_hour;	
 END FORMAT_NUMERIC_TO_HOUR;
 /
+SHOW ERRORS FUNCTION FORMAT_NUMERIC_TO_HOUR;
 
 --B)
+
 SELECT
 	PILOTE.NO_PILOTE,
 	PILOTE.NOM,
@@ -49,7 +52,6 @@ Fonction qui retourne le nombre de minutes de vol d'un pilote entre deux date
 ==============================================================================*/
 --A)
 SET SERVEROUTPUT ON SIZE 30000;
-SHOW ERRORS FUNCTION minutes_vol_pilote;
 
 CREATE OR REPLACE
 	FUNCTION minutes_vol_pilote(p_no_pilote IN NUMERIC, p_date_debut IN DATE, p_date_fin IN DATE) RETURN NUMERIC
@@ -92,6 +94,8 @@ BEGIN
 			
 END minutes_vol_pilote;
 /
+SHOW ERRORS FUNCTION minutes_vol_pilote;
+
 --B)
 SELECT
 	PILOTE.NO_PILOTE,
@@ -107,10 +111,9 @@ WHERE
 SELECT minutes_vol_pilote(14,TO_DATE('13-05-2015','DD-MM-YYYY'),TO_DATE('19-05-2015','DD-MM-YYYY')) FROM DUAL;
 SELECT minutes_vol_pilote(22,TO_DATE('29-05-2015','DD-MM-YYYY'),TO_DATE('19-05-2015','DD-MM-YYYY')) FROM DUAL;
 
-/*=================================================================
-Fonction pour avoir le nombre de places occupées maximal d'un vol
-==================================================================*/
-SHOW ERRORS FUNCTION GET_NUMBER_OF_OCCUPIED_PLACE;
+/*=================================================================================
+Fonction pour avoir le nombre de places occupées maximal d'un vol (voir dans Select 2)
+==================================================================================*/
 
 CREATE OR REPLACE
 	FUNCTION GET_NUMBER_OF_OCCUPIED_PLACE(P_ID_VOL IN NUMERIC, P_DATE_VOL IN VARCHAR2) RETURN NUMERIC
@@ -135,3 +138,6 @@ BEGIN
 	RETURN V_OCCUPIED;
 END GET_NUMBER_OF_OCCUPIED_PLACE;
 /
+SHOW ERRORS FUNCTION GET_NUMBER_OF_OCCUPIED_PLACE;
+
+SPOOL OFF;

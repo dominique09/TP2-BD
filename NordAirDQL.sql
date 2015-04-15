@@ -3,7 +3,9 @@
 	Schéma MRD:	"NordAir"
 	Auteur:		Dominique Septembre & Charles-Edouard Beaudet - Cégep de Ste-Foy  	
 ===========================================================*/
-
+SET LINESIZE 300;
+SET ECHO ON;
+SPOOL 'C:\SPOOL.txt';
 /*============================================================================
 	1.
 	Produire la liste des (segments de) vols de la compagnie NordAir au départ 
@@ -133,3 +135,5 @@ ORDER BY
 	DATA_TABLE.MIN_SEGEMNT,
 	DATA_TABLE.MAX_SEGMENT,
 	"PASSAGER";
+
+SPOOL OFF;

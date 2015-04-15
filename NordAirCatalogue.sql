@@ -4,7 +4,9 @@
 	Auteur:		Dominique Septembre & Charles-Edouard Beaudet - Cégep de Ste-Foy  	
 ===========================================================*/
 
-
+SET LINESIZE 200;
+SET ECHO ON;
+SPOOL 'C:\SPOOL.txt';
  /*==============================================================================
  A.	Produire la liste de toutes les contraintes d’intégrité référentielle 
 	(clés étrangères). Pour chaque contrainte d’intégrité référentielle, 
@@ -49,6 +51,8 @@ FROM
 WHERE
 	UI.UNIQUENESS = 'NONUNIQUE'
 ORDER BY 
-	UI.TABLE_NAME,
-	UI.INDEX_NAME,
-	UIC.COLUMN_POSITION ASC;
+	"TABLE",
+	"NOM",
+	"POSITION" ASC;
+	
+SPOOL OFF;
